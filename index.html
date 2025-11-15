@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APIs en Flask/FastAPI y consumo desde Node.js - Enciclopedia de Desarrollo</title>
+    <style>
+        /* Estilos generales */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+            line-height: 1.6;
+            color: #202122;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Header */
+        
+        header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #a2a9b1;
+            padding: 10px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #202122;
+            text-decoration: none;
+        }
+        /* Contenido principal */
+        
+        .main-content {
+            display: flex;
+            margin-top: 20px;
+        }
+        /* Barra lateral */
+        
+        .sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            margin-right: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #a2a9b1;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .sidebar h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 5px;
+        }
+        
+        .sidebar ul {
+            list-style-type: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+        
+        .sidebar a:hover {
+            text-decoration: underline;
+        }
+        /* Contenido principal */
+        
+        .content {
+            flex-grow: 1;
+            background-color: #ffffff;
+            border: 1px solid #a2a9b1;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul,
+        ol {
+            margin-bottom: 15px;
+            margin-left: 30px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+        /* Tabla de contenidos */
+        
+        .toc {
+            background-color: #f8f9fa;
+            border: 1px solid #a2a9b1;
+            padding: 15px;
+            margin-bottom: 20px;
+            width: auto;
+            display: table;
+        }
+        
+        .toc h2 {
+            font-size: 16px;
+            border: none;
+            margin: 0 0 10px 0;
+            padding: 0;
+        }
+        
+        .toc ul {
+            margin: 0;
+        }
+        
+        .toc li {
+            margin-bottom: 3px;
+        }
+        /* Código */
+        
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #eaecf0;
+            padding: 15px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        code {
+            background-color: #f8f9fa;
+            border: 1px solid #eaecf0;
+            padding: 1px 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        /* Infobox */
+        
+        .infobox {
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin: 0 0 20px 20px;
+            width: 300px;
+            float: right;
+            font-size: 14px;
+        }
+        
+        .infobox h2 {
+            font-size: 16px;
+            border: none;
+            margin: 0 0 10px 0;
+            padding: 0;
+        }
+        
+        .infobox th,
+        .infobox td {
+            vertical-align: top;
+            padding: 2px 5px;
+        }
+        
+        .infobox th {
+            text-align: left;
+            font-weight: normal;
+        }
+        /* Referencias y notas */
+        
+        .references {
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        
+        .references ol {
+            margin-left: 20px;
+        }
+        /* Footer */
+        
+        footer {
+            margin-top: 30px;
+            border-top: 1px solid #a2a9b1;
+            padding-top: 15px;
+            font-size: 12px;
+            color: #54595d;
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .infobox {
+                float: none;
+                width: 100%;
+                margin: 0 0 20px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        Hector Bolivar:30483199
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <aside class="sidebar">
+                <h3>Contenido</h3>
+                <ul>
+                    <li><a href="#introduccion">Introducción</a></li>
+                    <li><a href="#flask">Flask</a></li>
+                    <li><a href="#fastapi">FastAPI</a></li>
+                    <li><a href="#comparacion">Comparación</a></li>
+                    <li><a href="#nodejs">Node.js</a></li>
+                    <li><a href="#consumo">Consumo de APIs</a></li>
+                    <li><a href="#ejemplos">Ejemplos prácticos</a></li>
+                    <li><a href="#mejores-practicas">Mejores prácticas</a></li>
+                    <li><a href="#referencias">Referencias</a></li>
+                </ul>
+            </aside>
+
+            <main class="content">
+                <h1>APIs en Flask/FastAPI y consumo desde Node.js</h1>
+
+                <div class="infobox">
+                    <h2>APIs Web</h2>
+                    <table>
+                        <tr>
+                            <th>Desarrollador(es):</th>
+                            <td>Comunidad Python</td>
+                        </tr>
+                        <tr>
+                            <th>Lanzamiento inicial:</th>
+                            <td>Flask: 2010<br>FastAPI: 2018</td>
+                        </tr>
+                        <tr>
+                            <th>Lenguaje:</th>
+                            <td>Python</td>
+                        </tr>
+                        <tr>
+                            <th>Consumo:</th>
+                            <td>Node.js (JavaScript)</td>
+                        </tr>
+                        <tr>
+                            <th>Licencia:</th>
+                            <td>BSD</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <p>Las <strong>APIs web</strong> (Interfaz de Programación de Aplicaciones) son componentes fundamentales en el desarrollo de aplicaciones modernas, permitiendo la comunicación entre diferentes sistemas. En el ecosistema Python, <strong>Flask</strong>                    y <strong>FastAPI</strong> se han posicionado como dos de los frameworks más populares para crear APIs RESTful. Por otro lado, <strong>Node.js</strong> es ampliamente utilizado para consumir estas APIs desde aplicaciones JavaScript
+                    del lado del servidor o cliente.</p>
+
+                <div class="toc">
+                    <h2>Contenido</h2>
+                    <ul>
+                        <li><a href="#introduccion">1 Introducción</a></li>
+                        <li><a href="#flask">2 Flask</a>
+                            <ul>
+                                <li><a href="#flask-caracteristicas">2.1 Características principales</a></li>
+                                <li><a href="#flask-ejemplo">2.2 Ejemplo básico</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#fastapi">3 FastAPI</a>
+                            <ul>
+                                <li><a href="#fastapi-caracteristicas">3.1 Características principales</a></li>
+                                <li><a href="#fastapi-ejemplo">3.2 Ejemplo básico</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#comparacion">4 Comparación entre Flask y FastAPI</a></li>
+                        <li><a href="#nodejs">5 Node.js</a>
+                            <ul>
+                                <li><a href="#nodejs-caracteristicas">5.1 Características principales</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#consumo">6 Consumo de APIs desde Node.js</a>
+                            <ul>
+                                <li><a href="#axios">6.1 Uso de Axios</a></li>
+                                <li><a href="#fetch">6.2 Uso de Fetch</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#ejemplos">7 Ejemplos prácticos</a>
+                            <ul>
+                                <li><a href="#api-flask">7.1 API completa con Flask</a></li>
+                                <li><a href="#api-fastapi">7.2 API completa con FastAPI</a></li>
+                                <li><a href="#consumo-nodejs">7.3 Consumo desde Node.js</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#mejores-practicas">8 Mejores prácticas</a></li>
+                        <li><a href="#referencias">9 Referencias</a></li>
+                    </ul>
+                </div>
+
+                <h2 id="introduccion">Introducción</h2>
+                <p>En el desarrollo de aplicaciones modernas, es común utilizar diferentes tecnologías para el backend y frontend. Python, con frameworks como Flask y FastAPI, se ha consolidado como una excelente opción para crear APIs robustas y eficientes.
+                    Por otro lado, Node.js ofrece un entorno ideal para construir aplicaciones que consumen estas APIs, especialmente cuando se trabaja con JavaScript en todo el stack.</p>
+
+                <p>La comunicación entre estos sistemas se realiza principalmente a través de APIs RESTful, que utilizan el protocolo HTTP y formatos de datos como JSON para intercambiar información. Este artículo explora en detalle cómo crear APIs con Flask
+                    y FastAPI, y cómo consumirlas desde aplicaciones Node.js.</p>
+
+                <h2 id="flask">Flask</h2>
+                <p><strong>Flask</strong> es un microframework para Python basado en Werkzeug y Jinja2. Es minimalista, flexible y fácil de usar, lo que lo hace ideal para proyectos pequeños y medianos, así como para prototipado rápido.</p>
+
+                <h3 id="flask-caracteristicas">Características principales</h3>
+                <ul>
+                    <li><strong>Minimalista:</strong> Proporciona solo lo esencial, permitiendo al desarrollador añadir extensiones según sus necesidades.</li>
+                    <li><strong>Flexible:</strong> No impone una estructura específica de proyecto.</li>
+                    <li><strong>Extensible:</strong> Cuenta con un ecosistema de extensiones para funcionalidades adicionales.</li>
+                    <li><strong>Documentación completa:</strong> Amplia documentación y comunidad activa.</li>
+                    <li><strong>Compatibilidad:</strong> Funciona con cualquier base de datos y sistema de plantillas.</li>
+                </ul>
+
+                <h3 id="flask-ejemplo">Ejemplo básico</h3>
+                <p>A continuación, un ejemplo básico de una API REST con Flask:</p>
+                <pre><code>from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Datos de ejemplo
+users = [
+    {"id": 1, "name": "Juan Pérez", "email": "juan@example.com"},
+    {"id": 2, "name": "María García", "email": "maria@example.com"}
+]
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    return jsonify(users)
+
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = next((u for u in users if u['id'] == user_id), None)
+    if user:
+        return jsonify(user)
+    return jsonify({"error": "Usuario no encontrado"}), 404
+
+@app.route('/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    new_user = {
+        "id": len(users) + 1,
+        "name": data.get('name'),
+        "email": data.get('email')
+    }
+    users.append(new_user)
+    return jsonify(new_user), 201
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+
+                <h2 id="fastapi">FastAPI</h2>
+                <p><strong>FastAPI</strong> es un framework moderno y rápido para construir APIs con Python 3.6+ basado en type hints estándar de Python. Se caracteriza por su alto rendimiento, comparable con Node.js y Go.</p>
+
+                <h3 id="fastapi-caracteristicas">Características principales</h3>
+                <ul>
+                    <li><strong>Alto rendimiento:</strong> Uno de los frameworks más rápidos disponibles, gracias a Starlette y Pydantic.</li>
+                    <li><strong>Desarrollo rápido:</strong> Reduce en aproximadamente un 40% los errores humanos gracias al sistema de tipos.</li>
+                    <li><strong>Documentación automática:</strong> Genera automáticamente documentación interactiva (Swagger UI y ReDoc).</li>
+                    <li><strong>Basado en estándares:</strong> Compatible completamente con los estándares OpenAPI y JSON Schema.</li>
+                    <li><strong>Soporte nativo para async/await:</strong> Permite escribir código asíncrono de forma natural.</li>
+                </ul>
+
+                <h3 id="fastapi-ejemplo">Ejemplo básico</h3>
+                <p>El mismo ejemplo anterior implementado con FastAPI:</p>
+                <pre><code>from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+app = FastAPI()
+
+# Modelo de datos
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+
+# Datos de ejemplo
+users = [
+    User(id=1, name="Juan Pérez", email="juan@example.com"),
+    User(id=2, name="María García", email="maria@example.com")
+]
+
+@app.get("/users", response_model=List[User])
+async def get_users():
+    return users
+
+@app.get("/users/{user_id}", response_model=User)
+async def get_user(user_id: int):
+    user = next((u for u in users if u.id == user_id), None)
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return user
+
+@app.post("/users", response_model=User)
+async def create_user(user: UserCreate):
+    new_user = User(
+        id=len(users) + 1,
+        name=user.name,
+        email=user.email
+    )
+    users.append(new_user)
+    return new_user</code></pre>
+
+                <h2 id="comparacion">Comparación entre Flask y FastAPI</h2>
+                <p>Aunque ambos frameworks permiten crear APIs en Python, presentan diferencias importantes:</p>
+
+                <ul>
+                    <li><strong>Rendimiento:</strong> FastAPI es significativamente más rápido que Flask, especialmente en operaciones I/O.</li>
+                    <li><strong>Validación de datos:</strong> FastAPI valida automáticamente los tipos de datos usando Pydantic, mientras que en Flask se requiere código adicional o extensiones.</li>
+                    <li><strong>Documentación:</strong> FastAPI genera documentación automática, Flask requiere herramientas externas.</li>
+                    <li><strong>Asincronía:</strong> FastAPI soporta nativamente async/await, Flask requiere extensiones como Flask-Asyncio.</li>
+                    <li><strong>Curva de aprendizaje:</strong> Flask es más simple para principiantes, FastAPI requiere conocimiento de type hints y conceptos más avanzados.</li>
+                    <li><strong>Comunidad y ecosistema:</strong> Flask tiene una comunidad más grande y más extensiones disponibles.</li>
+                </ul>
+
+                <h2 id="nodejs">Node.js</h2>
+                <p><strong>Node.js</strong> es un entorno de ejecución para JavaScript construido con el motor V8 de Chrome. Permite ejecutar código JavaScript en el servidor, lo que facilita el desarrollo de aplicaciones full-stack con un único lenguaje.</p>
+
+                <h3 id="nodejs-caracteristicas">Características principales</h3>
+                <ul>
+                    <li><strong>Asíncrono y orientado a eventos:</strong> Maneja operaciones I/O de forma no bloqueante.</li>
+                    <li><strong>Un solo hilo:</strong> Utiliza un modelo de bucle de eventos para manejar múltiples conexiones concurrentes.</li>
+                    <li><strong>NPM:</strong> Gestor de paquetes más grande del ecosistema JavaScript.</li>
+                    <li><strong>Alto rendimiento:</strong> Ideal para aplicaciones que requieren alta concurrencia.</li>
+                    <li><strong>Universal JavaScript:</strong> Permite usar el mismo lenguaje en frontend y backend.</li>
+                </ul>
+
+                <h2 id="consumo">Consumo de APIs desde Node.js</h2>
+                <p>Node.js ofrece varias formas de consumir APIs externas. Las dos opciones más comunes son <strong>Axios</strong> (biblioteca de terceros) y <strong>Fetch API</strong (nativa en Node.js desde la versión 18).</p>
+                
+                <h3 id="axios">Uso de Axios</h3>
+                <p>Axios es una popular biblioteca para realizar peticiones HTTP. Ofrece una API sencilla y características avanzadas como interceptores y cancelación de peticiones.</p>
+                
+                <pre><code>const axios = require('axios');
+
+// Obtener todos los usuarios
+async function getUsers() {
+    try {
+        const response = await axios.get('http://localhost:8000/users');
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.message);
+    }
+}
+
+// Crear un nuevo usuario
+async function createUser(userData) {
+    try {
+        const response = await axios.post('http://localhost:8000/users', userData);
+        console.log('Usuario creado:', response.data);
+    } catch (error) {
+        console.error('Error al crear usuario:', error.message);
+    }
+}
+
+// Ejemplo de uso
+getUsers();
+createUser({ name: "Carlos López", email: "carlos@example.com" });</code></pre>
+                
+                <h3 id="fetch">Uso de Fetch</h3>
+                <p>Desde Node.js 18, la API Fetch está disponible de forma nativa, eliminando la necesidad de bibliotecas externas para casos simples.</p>
+                
+                <pre><code>// Obtener todos los usuarios
+async function getUsers() {
+    try {
+        const response = await fetch('http://localhost:8000/users');
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const users = await response.json();
+        console.log(users);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.message);
+    }
+}
+
+// Crear un nuevo usuario
+async function createUser(userData) {
+    try {
+        const response = await fetch('http://localhost:8000/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const newUser = await response.json();
+        console.log('Usuario creado:', newUser);
+    } catch (error) {
+        console.error('Error al crear usuario:', error.message);
+    }
+}
+
+// Ejemplo de uso
+getUsers();
+createUser({ name: "Ana Martínez", email: "ana@example.com" });</code></pre>
+                
+                <h2 id="ejemplos">Ejemplos prácticos</h2>
+                
+                <h3 id="api-flask">API completa con Flask</h3>
+                <p>Un ejemplo más completo de API con Flask que incluye autenticación JWT y base de datos:</p>
+                
+                <pre><code>from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['JWT_SECRET_KEY'] = 'super-secret-key'
+
+db = SQLAlchemy(app)
+jwt = JWTManager(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    
+    user = User.query.filter_by(username=username).first()
+    
+    if user and check_password_hash(user.password_hash, password):
+        access_token = create_access_token(identity=username)
+        return jsonify(access_token=access_token)
+    
+    return jsonify({"msg": "Credenciales incorrectas"}), 401
+
+@app.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    return jsonify(msg="Acceso concedido a ruta protegida")
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)</code></pre>
+                
+                <h3 id="api-fastapi">API completa con FastAPI</h3>
+                <p>El mismo ejemplo implementado con FastAPI:</p>
+                
+                <pre><code>from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from pydantic import BaseModel
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+import jwt
+from passlib.context import CryptContext
+
+app = FastAPI()
+security = HTTPBearer()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Configuración de base de datos
+SQLALCHEMY_DATABASE_URL = "sqlite:///./users.db"
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    password_hash = Column(String)
+
+Base.metadata.create_all(bind=engine)
+
+# Modelos
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+# Dependencias
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def create_access_token(data: dict):
+    return jwt.encode(data, "super-secret-key", algorithm="HS256")
+
+@app.post("/register")
+def register(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Usuario ya existe")
+    
+    hashed_password = get_password_hash(user.password)
+    new_user = User(username=user.username, password_hash=hashed_password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return {"msg": "Usuario registrado exitosamente"}
+
+@app.post("/login", response_model=Token)
+def login(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if not db_user or not verify_password(user.password, db_user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales incorrectas"
+        )
+    
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/protected")
+def protected(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, "super-secret-key", algorithms=["HS256"])
+        username = payload.get("sub")
+        return {"msg": f"Acceso concedido a {username}"}
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido"
+        )</code></pre>
+                
+                <h3 id="consumo-nodejs">Consumo desde Node.js</h3>
+                <p>Ejemplo de consumo de la API protegida desde Node.js:</p>
+                
+                <pre><code>const axios = require('axios');
+
+class APIClient {
+    constructor(baseURL) {
+        this.baseURL = baseURL;
+        this.token = null;
+    }
+    
+    async login(username, password) {
+        try {
+            const response = await axios.post(`${this.baseURL}/login`, {
+                username,
+                password
+            });
+            
+            this.token = response.data.access_token;
+            console.log('Login exitoso');
+            return true;
+        } catch (error) {
+            console.error('Error en login:', error.response?.data?.detail || error.message);
+            return false;
+        }
+    }
+    
+    async getProtectedData() {
+        if (!this.token) {
+            console.error('No hay token de autenticación');
+            return null;
+        }
+        
+        try {
+            const response = await axios.get(`${this.baseURL}/protected`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`
+                }
+            });
+            
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener datos protegidos:', error.response?.data?.detail || error.message);
+            return null;
+        }
+    }
+}
+
+// Uso del cliente
+async function main() {
+    const client = new APIClient('http://localhost:8000');
+    
+    // Iniciar sesión
+    const loggedIn = await client.login('usuario', 'contraseña');
+    
+    if (loggedIn) {
+        // Acceder a ruta protegida
+        const protectedData = await client.getProtectedData();
+        console.log('Datos protegidos:', protectedData);
+    }
+}
+
+main();</code></pre>
+                
+                <h2 id="mejores-practicas">Mejores prácticas</h2>
+                
+                <h3>Para APIs en Flask/FastAPI:</h3>
+                <ul>
+                    <li><strong>Validación de datos:</strong> Siempre validar y sanitizar los datos de entrada.</li>
+                    <li><strong>Manejo de errores:</strong> Implementar un manejo consistente de errores con códigos HTTP apropiados.</li>
+                    <li><strong>Autenticación y autorización:</strong> Usar JWT u OAuth2 para proteger endpoints sensibles.</li>
+                    <li><strong>Documentación:</strong> Documentar la API usando OpenAPI/Swagger.</li>
+                    <li><strong>Rate limiting:</strong> Implementar límites de tasa para prevenir abusos.</li>
+                    <li><strong>Logging:</strong> Registrar actividades importantes para monitoreo y debugging.</li>
+                    <li><strong>Pruebas:</strong> Escribir pruebas unitarias e integrales para la API.</li>
+                    </ul>
+
+                    <h3>Para consumo desde Node.js:</h3>
+                    <ul>
+                        <li><strong>Manejo de errores:</strong> Implementar un manejo robusto de errores en las peticiones.</li>
+                        <li><strong>Timeouts:</strong> Configurar timeouts apropiados para evitar peticiones bloqueantes.</li>
+                        <li><strong>Retry logic:</strong> Implementar lógica de reintento para peticiones fallidas.</li>
+                        <li><strong>Circuit breaker:</strong> Usar patrones como circuit breaker para prevenir fallos en cascada.</li>
+                        <li><strong>Seguridad:</strong> Validar respuestas y sanitizar datos recibidos de la API.</li>
+                        <li><strong>Cache:</strong> Implementar cache cuando sea apropiado para mejorar el rendimiento.</li>
+                    </ul>
+
+                    <h2 id="referencias">Referencias</h2>
+                    <div class="references">
+                        <ol>
+                            <li>Documentación oficial de Flask: <a href="https://flask.palletsprojects.com/">https://flask.palletsprojects.com/</a></li>
+                            <li>Documentación oficial de FastAPI: <a href="https://fastapi.tiangolo.com/">https://fastapi.tiangolo.com/</a></li>
+                            <li>Documentación oficial de Node.js: <a href="https://nodejs.org/docs/">https://nodejs.org/docs/</a></li>
+                            <li>Axios - Cliente HTTP para Node.js: <a href="https://axios-http.com/">https://axios-http.com/</a></li>
+                            <li>Pydantic - Validación de datos en Python: <a href="https://pydantic-docs.helpmanual.io/">https://pydantic-docs.helpmanual.io/</a></li>
+                            <li>SQLAlchemy - ORM para Python: <a href="https://www.sqlalchemy.org/">https://www.sqlalchemy.org/</a></li>
+                            <li>JWT - JSON Web Tokens: <a href="https://jwt.io/">https://jwt.io/</a></li>
+                        </ol>
+                    </div>
+
+                    <footer>
+                        <p>Este artículo fue creado con fines educativos. La información presentada está basada en documentación oficial y mejores prácticas de la comunidad.</p>
+                        <p>Última actualización: Enero 2024</p>
+                    </footer>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>
